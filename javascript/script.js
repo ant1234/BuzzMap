@@ -1,17 +1,26 @@
-(function(window, google){
+(function(window, BuzzMap) {
+  // map options
+  var options = BuzzMap.MAP_OPTIONS,
+  element = document.getElementById('map-canvas'),
+  // map
+  map = BuzzMap.create(element, options);
 
-// map options
-var options = {
-	center: {
-		lat: -36.849333,
-		lng: 174.761947
-	},
-	zoom: 10
-}
+  var marker2 = map.addMarker({
+	lat: -36.857975, 
+	lng: 174.721354,
+    draggable: true,
+    events: [{
+      name: 'click',
+      callback: function(e, marker) {
+        console.log(e, marker);
+      }
+    }, {
+      name: 'dragend',
+      callback: function() {
+        alert('dragged');
+      }
+    }],
+    icon: 'assets/icons/bar.png'
+  });
 
-var element = document.getElementById('map-canvas');
-
-// map
-var map = new google.maps.Map(element, options);
-
-}(window, window.google));
+}(window, window.BuzzMap));
