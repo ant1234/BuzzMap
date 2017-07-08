@@ -1,28 +1,35 @@
 (function(window, google, List) {
 
   var BuzzMap = (function() {
-    function BuzzMap(element, opts) {
+
+    function BuzzMap( element, opts ) { // set up map
       this.gMap = new google.maps.Map(element, opts);
       this.markers = List.create();
       if (opts.cluster) {
         this.markerClusterer = new MarkerClusterer(this.gMap, [], opts.cluster.options);
       }
     }
+
+    // set up buzz map class 
     BuzzMap.prototype = {
-      zoom: function(level) {
+
+      zoom: function(level) { // handle zoom
         if (level) {
           this.gMap.setZoom(level);
         } else {
           return this.gMap.getZoom();
         }
       },
-      _on: function(opts) {
+
+      _on: function(opts) { // handle events 
         var self = this;
         google.maps.event.addListener(opts.obj, opts.event, function(e) {
           opts.callback.call(self, e, opts.obj);
         });
       },
-      addMarker: function(opts) {
+
+      addMarker: function(opts) { // add marker & set up properties 
+
         var marker,
           self = this;
 
@@ -30,15 +37,21 @@
           lat: opts.lat,
           lng: opts.lng
         }
+
         marker = this._createMarker(opts);
+
         if (this.markerClusterer) {
           this.markerClusterer.addMarker(marker);
         }
+
         this._addMarker(marker);
+
         if (opts.events) {
           this._attachEvents(marker, opts.events);
         }
+
         if (opts.content) {
+
           this._on({
             obj: marker,
             event: 'click',
@@ -50,10 +63,15 @@
               infoWindow.open(this.gMap, marker);
             }
           })
+
         }
+
         return marker;
+
       },
-      _attachEvents: function(obj, events) {
+
+      _attachEvents: function(obj, events) { // attach events 
+
         var self = this;
         events.forEach(function(event) {
           self._on({
@@ -62,13 +80,17 @@
             callback: event.callback
           });
         });
+
       },
-      _addMarker: function(marker) {
+
+      _addMarker: function(marker) { 
         this.markers.add(marker);
       },
+
       findBy: function(callback) {
         this.markers.find(callback);
       },
+
       removeBy: function(callback) {
         var self = this;
         self.markers.find(callback, function(markers) {
@@ -81,12 +103,16 @@
           });
         });
       },
+
       _createMarker: function(opts) {
         opts.map = this.gMap;
         return new google.maps.Marker(opts);
       }
+
     };
+
     return BuzzMap;
+
   }());
 
   BuzzMap.create = function(element, opts) {

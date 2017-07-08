@@ -1,4 +1,5 @@
 (function(window, BuzzMap) {
+
   // map options
   var options = BuzzMap.MAP_OPTIONS,
   element = document.getElementById('map-canvas'),
